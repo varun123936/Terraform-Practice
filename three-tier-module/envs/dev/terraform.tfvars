@@ -1,4 +1,5 @@
 aws_region            = "us-east-1"
+name_prefix           = "dev"
 vpc_cidr              = "10.0.0.0/16"
 vpc_name              = "dev-vpc"
 igw_name              = "dev-igw"

@@ -1,3 +1,27 @@
+locals {
+  public_subnet_1_name   = "${var.name_prefix}-public-subnet-1"
+  public_subnet_2_name   = "${var.name_prefix}-public-subnet-2"
+  private_subnet_1_name  = "${var.name_prefix}-private-subnet-1"
+  private_subnet_2_name  = "${var.name_prefix}-private-subnet-2"
+  private_subnet_3_name  = "${var.name_prefix}-private-subnet-3"
+  private_subnet_4_name  = "${var.name_prefix}-private-subnet-4"
+  private_subnet_5_name  = "${var.name_prefix}-private-subnet-5"
+  private_subnet_6_name  = "${var.name_prefix}-private-subnet-6"
+  nat_eip_1_name         = "${var.name_prefix}-nat-eip-1"
+  nat_eip_2_name         = "${var.name_prefix}-nat-eip-2"
+  nat_gateway_1_name     = "${var.name_prefix}-nat-gateway-1"
+  nat_gateway_2_name     = "${var.name_prefix}-nat-gateway-2"
+  public_route_table     = "${var.name_prefix}-public-route-table"
+  private_route_table_1a = "${var.name_prefix}-private-route-table-1a"
+  private_route_table_1b = "${var.name_prefix}-private-route-table-1b"
+  bastion_sg_name        = "${var.name_prefix}-bastion-host-sg"
+  alb_frontend_sg_name   = "${var.name_prefix}-alb-frontend-sg"
+  alb_backend_sg_name    = "${var.name_prefix}-alb-backend-sg"
+  frontend_server_sg     = "${var.name_prefix}-frontend-server-sg"
+  backend_server_sg      = "${var.name_prefix}-backend-server-sg"
+  database_sg_name       = "${var.name_prefix}-database-sg"
+}
+
 resource "aws_vpc" "dev" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -24,7 +48,7 @@ resource "aws_subnet" "public_1" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "dev-public-subnet-1"
+    Name = local.public_subnet_1_name
   }
 }
 
@@ -35,7 +59,7 @@ resource "aws_subnet" "public_2" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "dev-public-subnet-2"
+    Name = local.public_subnet_2_name
   }
 }
 
@@ -46,7 +70,7 @@ resource "aws_subnet" "private_1" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-1"
+    Name = local.private_subnet_1_name
   }
 }
 
@@ -57,7 +81,7 @@ resource "aws_subnet" "private_2" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-2"
+    Name = local.private_subnet_2_name
   }
 }
 
@@ -68,7 +92,7 @@ resource "aws_subnet" "private_3" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-3"
+    Name = local.private_subnet_3_name
   }
 }
 
@@ -79,7 +103,7 @@ resource "aws_subnet" "private_4" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-4"
+    Name = local.private_subnet_4_name
   }
 }
 
@@ -90,7 +114,7 @@ resource "aws_subnet" "private_5" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-5"
+    Name = local.private_subnet_5_name
   }
 }
 
@@ -101,7 +125,7 @@ resource "aws_subnet" "private_6" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "dev-private-subnet-6"
+    Name = local.private_subnet_6_name
   }
 }
 
@@ -109,7 +133,7 @@ resource "aws_eip" "nat_1" {
   domain = "vpc"
 
   tags = {
-    Name = "dev-nat-eip-1"
+    Name = local.nat_eip_1_name
   }
 }
 
@@ -117,7 +141,7 @@ resource "aws_eip" "nat_2" {
   domain = "vpc"
 
   tags = {
-    Name = "dev-nat-eip-2"
+    Name = local.nat_eip_2_name
   }
 }
 
@@ -126,7 +150,7 @@ resource "aws_nat_gateway" "nat_1" {
   subnet_id     = aws_subnet.public_1.id
 
   tags = {
-    Name = "dev-nat-gateway-1"
+    Name = local.nat_gateway_1_name
   }
 
   depends_on = [aws_internet_gateway.dev]
@@ -137,7 +161,7 @@ resource "aws_nat_gateway" "nat_2" {
   subnet_id     = aws_subnet.public_2.id
 
   tags = {
-    Name = "dev-nat-gateway-2"
+    Name = local.nat_gateway_2_name
   }
 
   depends_on = [aws_internet_gateway.dev]
@@ -147,7 +171,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.dev.id
 
   tags = {
-    Name = "dev-public-route-table"
+    Name = local.public_route_table
   }
 }
 
@@ -171,7 +195,7 @@ resource "aws_route_table" "private_1a" {
   vpc_id = aws_vpc.dev.id
 
   tags = {
-    Name = "dev-private-route-table-1a"
+    Name = local.private_route_table_1a
   }
 }
 
@@ -179,7 +203,7 @@ resource "aws_route_table" "private_1b" {
   vpc_id = aws_vpc.dev.id
 
   tags = {
-    Name = "dev-private-route-table-1b"
+    Name = local.private_route_table_1b
   }
 }
 
@@ -226,7 +250,7 @@ resource "aws_route_table_association" "private_6" {
 }
 
 resource "aws_security_group" "bastion_host" {
-  name        = "bastion-host-sg"
+  name        = local.bastion_sg_name
   description = "Allow SSH access to the bastion host"
   vpc_id      = aws_vpc.dev.id
 
@@ -246,12 +270,12 @@ resource "aws_security_group" "bastion_host" {
   }
 
   tags = {
-    Name = "bastion-host-sg"
+    Name = local.bastion_sg_name
   }
 }
 
 resource "aws_security_group" "alb_frontend" {
-  name        = "alb-frontend-sg"
+  name        = local.alb_frontend_sg_name
   description = "Allow public web traffic to the frontend ALB"
   vpc_id      = aws_vpc.dev.id
 
@@ -279,12 +303,12 @@ resource "aws_security_group" "alb_frontend" {
   }
 
   tags = {
-    Name = "alb-frontend-sg"
+    Name = local.alb_frontend_sg_name
   }
 }
 
 resource "aws_security_group" "alb_backend" {
-  name        = "alb-backend-sg"
+  name        = local.alb_backend_sg_name
   description = "Allow application traffic to the backend ALB"
   vpc_id      = aws_vpc.dev.id
 
@@ -312,12 +336,12 @@ resource "aws_security_group" "alb_backend" {
   }
 
   tags = {
-    Name = "alb-backend-sg"
+    Name = local.alb_backend_sg_name
   }
 }
 
 resource "aws_security_group" "frontend_server" {
-  name        = "frontend-server-sg"
+  name        = local.frontend_server_sg
   description = "Allow bastion SSH and frontend ALB traffic to frontend servers"
   vpc_id      = aws_vpc.dev.id
 
@@ -345,12 +369,12 @@ resource "aws_security_group" "frontend_server" {
   }
 
   tags = {
-    Name = "frontend-server-sg"
+    Name = local.frontend_server_sg
   }
 }
 
 resource "aws_security_group" "backend_server" {
-  name        = "backend-server-sg"
+  name        = local.backend_server_sg
   description = "Allow bastion SSH and backend ALB traffic to backend servers"
   vpc_id      = aws_vpc.dev.id
 
@@ -378,12 +402,12 @@ resource "aws_security_group" "backend_server" {
   }
 
   tags = {
-    Name = "backend-server-sg"
+    Name = local.backend_server_sg
   }
 }
 
 resource "aws_security_group" "database" {
-  name        = "database-sg"
+  name        = local.database_sg_name
   description = "Allow MySQL access from backend servers"
   vpc_id      = aws_vpc.dev.id
 
@@ -403,6 +427,6 @@ resource "aws_security_group" "database" {
   }
 
   tags = {
-    Name = "database-sg"
+    Name = local.database_sg_name
   }
 }

@@ -4,6 +4,11 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "name_prefix" {
+  description = "Common prefix used for infrastructure resource names."
+  type        = string
+}
+
 variable "vpc_name" {
   description = "Name tag for the VPC."
   type        = string

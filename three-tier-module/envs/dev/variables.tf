@@ -3,6 +3,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "name_prefix" {
+  description = "Common prefix used for infrastructure resource names."
+  type        = string
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
