@@ -87,3 +87,44 @@ variable "bastion_name" {
   description = "Name tag for the bastion host."
   type        = string
 }
+
+variable "db_identifier" {
+  description = "Identifier for the RDS instance."
+  type        = string
+}
+
+variable "db_name" {
+  description = "Initial database name."
+  type        = string
+}
+
+variable "db_username" {
+  description = "Master username for the database."
+  type        = string
+}
+
+variable "db_password" {
+  description = "Master password for the database."
+  type        = string
+  sensitive   = true
+}
+
+variable "db_instance_class" {
+  description = "Instance class for the RDS instance."
+  type        = string
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage in GB."
+  type        = number
+}
+
+variable "db_engine_version" {
+  description = "MySQL engine version."
+  type        = string
+}
+
+variable "db_subnet_group_name" {
+  description = "Name of the DB subnet group."
+  type        = string
+}

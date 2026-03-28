@@ -27,3 +27,18 @@ module "bastion" {
   security_group_id = module.infrastructure.bastion_sg_id
   instance_name     = var.bastion_name
 }
+
+module "database" {
+  source = "../../modules/database"
+
+  db_subnet_ids     = [module.infrastructure.private_subnet_ids[2], module.infrastructure.private_subnet_ids[5]]
+  database_sg_id    = module.infrastructure.database_sg_id
+  db_identifier     = var.db_identifier
+  db_name           = var.db_name
+  db_username       = var.db_username
+  db_password       = var.db_password
+  db_instance_class = var.db_instance_class
+  allocated_storage = var.db_allocated_storage
+  engine_version    = var.db_engine_version
+  subnet_group_name = var.db_subnet_group_name
+}

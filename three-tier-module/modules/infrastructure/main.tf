@@ -419,6 +419,14 @@ resource "aws_security_group" "database" {
     security_groups = [aws_security_group.backend_server.id]
   }
 
+  ingress {
+    description     = "MySQL from bastion host"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_host.id]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
