@@ -15,3 +15,14 @@ module "infrastructure" {
   private_subnet_5_cidr = var.private_subnet_5_cidr
   private_subnet_6_cidr = var.private_subnet_6_cidr
 }
+
+module "bastion" {
+  source = "../../modules/bastion"
+
+  aws_region        = var.aws_region
+  instance_type     = var.bastion_instance_type
+  key_name          = var.bastion_key_name
+  subnet_id         = module.infrastructure.public_subnet_ids[0]
+  security_group_id = module.infrastructure.bastion_sg_id
+  instance_name     = var.bastion_name
+}

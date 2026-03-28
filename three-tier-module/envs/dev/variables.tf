@@ -67,3 +67,18 @@ variable "private_subnet_6_cidr" {
   description = "CIDR block for private subnet 3 in AZ 2."
   type        = string
 }
+
+variable "bastion_instance_type" {
+  description = "Instance type for the bastion host."
+  type        = string
+}
+
+variable "bastion_key_name" {
+  description = "Existing AWS key pair name for the bastion host."
+  type        = string
+}
+
+variable "bastion_name" {
+  description = "Name tag for the bastion host."
+  type        = string
+}
