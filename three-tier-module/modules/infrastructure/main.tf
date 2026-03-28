@@ -224,3 +224,185 @@ resource "aws_route_table_association" "private_6" {
   subnet_id      = aws_subnet.private_6.id
   route_table_id = aws_route_table.private_1b.id
 }
+
+resource "aws_security_group" "bastion_host" {
+  name        = "bastion-host-sg"
+  description = "Allow SSH access to the bastion host"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description = "SSH access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_ssh_cidr
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "bastion-host-sg"
+  }
+}
+
+resource "aws_security_group" "alb_frontend" {
+  name        = "alb-frontend-sg"
+  description = "Allow public web traffic to the frontend ALB"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description = "HTTP from internet"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTPS from internet"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "alb-frontend-sg"
+  }
+}
+
+resource "aws_security_group" "alb_backend" {
+  name        = "alb-backend-sg"
+  description = "Allow application traffic to the backend ALB"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description     = "HTTP from frontend servers"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.frontend_server.id]
+  }
+
+  ingress {
+    description     = "HTTPS from frontend servers"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.frontend_server.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "alb-backend-sg"
+  }
+}
+
+resource "aws_security_group" "frontend_server" {
+  name        = "frontend-server-sg"
+  description = "Allow bastion SSH and frontend ALB traffic to frontend servers"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description     = "SSH from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_host.id]
+  }
+
+  ingress {
+    description     = "HTTP from frontend ALB"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_frontend.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "frontend-server-sg"
+  }
+}
+
+resource "aws_security_group" "backend_server" {
+  name        = "backend-server-sg"
+  description = "Allow bastion SSH and backend ALB traffic to backend servers"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description     = "SSH from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_host.id]
+  }
+
+  ingress {
+    description     = "HTTP from backend ALB"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_backend.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "backend-server-sg"
+  }
+}
+
+resource "aws_security_group" "database" {
+  name        = "database-sg"
+  description = "Allow MySQL access from backend servers"
+  vpc_id      = aws_vpc.dev.id
+
+  ingress {
+    description     = "MySQL from backend servers"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.backend_server.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "database-sg"
+  }
+}

@@ -65,3 +65,9 @@ variable "private_subnet_6_cidr" {
   description = "CIDR block for private subnet 3 in AZ 2."
   type        = string
 }
+
+variable "allowed_ssh_cidr" {
+  description = "CIDR blocks allowed to SSH to the bastion host."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
