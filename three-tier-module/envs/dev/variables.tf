@@ -128,3 +128,18 @@ variable "db_subnet_group_name" {
   description = "Name of the DB subnet group."
   type        = string
 }
+
+variable "backend_instance_type" {
+  description = "Instance type for the backend server."
+  type        = string
+}
+
+variable "backend_key_name" {
+  description = "Existing AWS key pair name for the backend server."
+  type        = string
+}
+
+variable "backend_name" {
+  description = "Name tag for the backend server."
+  type        = string
+}

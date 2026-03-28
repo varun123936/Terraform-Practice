@@ -42,3 +42,14 @@ module "database" {
   engine_version    = var.db_engine_version
   subnet_group_name = var.db_subnet_group_name
 }
+
+module "backend" {
+  source = "../../modules/backend/ec2"
+
+  aws_region        = var.aws_region
+  instance_type     = var.backend_instance_type
+  key_name          = var.backend_key_name
+  subnet_id         = module.infrastructure.private_subnet_ids[1]
+  security_group_id = module.infrastructure.backend_server_sg_id
+  instance_name     = var.backend_name
+}

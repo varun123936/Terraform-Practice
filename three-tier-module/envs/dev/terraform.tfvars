@@ -24,3 +24,6 @@ db_instance_class     = "db.t3.micro"
 db_allocated_storage  = 20
 db_engine_version     = "8.0"
 db_subnet_group_name  = "dev-private-db-subnet-group"
+backend_instance_type = "t3.micro"
+backend_key_name      = "threetier"
+backend_name          = "dev-backend-server"

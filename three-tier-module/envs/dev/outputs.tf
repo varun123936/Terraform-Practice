@@ -32,3 +32,13 @@ output "db_endpoint" {
   description = "Endpoint of the private RDS instance."
   value       = module.database.db_endpoint
 }
+
+output "backend_instance_id" {
+  description = "ID of the backend EC2 instance."
+  value       = module.backend.backend_instance_id
+}
+
+output "backend_private_ip" {
+  description = "Private IP of the backend EC2 instance."
+  value       = module.backend.backend_private_ip
+}
