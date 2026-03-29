@@ -25,5 +25,6 @@ db_allocated_storage  = 20
 db_engine_version     = "8.0"
 db_subnet_group_name  = "dev-private-db-subnet-group"
 backend_instance_type = "t3.micro"
+backend_ami_id        = "ami-0c3389a4fa5bddaad"
 backend_key_name      = "threetier"
 backend_name          = "dev-backend-server"

@@ -47,6 +47,7 @@ module "backend" {
   source = "../../modules/backend/ec2"
 
   aws_region        = var.aws_region
+  ami_id            = var.backend_ami_id
   instance_type     = var.backend_instance_type
   key_name          = var.backend_key_name
   subnet_id         = module.infrastructure.private_subnet_ids[1]

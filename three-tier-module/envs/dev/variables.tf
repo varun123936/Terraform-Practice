@@ -134,6 +134,11 @@ variable "backend_instance_type" {
   type        = string
 }
 
+variable "backend_ami_id" {
+  description = "AMI ID for the backend server."
+  type        = string
+}
+
 variable "backend_key_name" {
   description = "Existing AWS key pair name for the backend server."
   type        = string
