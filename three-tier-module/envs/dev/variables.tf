@@ -148,3 +148,33 @@ variable "backend_name" {
   description = "Name tag for the backend server."
   type        = string
 }
+
+variable "backend_alb_name" {
+  description = "Name of the backend ALB."
+  type        = string
+}
+
+variable "backend_alb_target_group_name" {
+  description = "Name of the backend ALB target group."
+  type        = string
+}
+
+variable "backend_alb_internal" {
+  description = "Whether the backend ALB is internal."
+  type        = bool
+}
+
+variable "backend_alb_listener_port" {
+  description = "Listener port for the backend ALB."
+  type        = number
+}
+
+variable "backend_alb_target_port" {
+  description = "Target port for the backend ALB target group."
+  type        = number
+}
+
+variable "backend_alb_health_check_path" {
+  description = "Health check path for the backend ALB target group."
+  type        = string
+}

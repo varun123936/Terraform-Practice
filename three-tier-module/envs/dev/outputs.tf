@@ -42,3 +42,13 @@ output "backend_private_ip" {
   description = "Private IP of the backend EC2 instance."
   value       = module.backend.backend_private_ip
 }
+
+output "backend_alb_dns_name" {
+  description = "DNS name of the backend ALB."
+  value       = module.backend_alb.alb_dns_name
+}
+
+output "backend_alb_target_group_arn" {
+  description = "Target group ARN for the backend ALB."
+  value       = module.backend_alb.target_group_arn
+}
