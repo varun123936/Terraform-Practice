@@ -52,3 +52,13 @@ output "backend_alb_target_group_arn" {
   description = "Target group ARN for the backend ALB."
   value       = module.backend_alb.target_group_arn
 }
+
+output "frontend_instance_id" {
+  description = "ID of the frontend EC2 instance."
+  value       = module.frontend.frontend_instance_id
+}
+
+output "frontend_private_ip" {
+  description = "Private IP of the frontend EC2 instance."
+  value       = module.frontend.frontend_private_ip
+}

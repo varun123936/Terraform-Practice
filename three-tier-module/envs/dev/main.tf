@@ -69,3 +69,15 @@ module "backend_alb" {
   target_port        = var.backend_alb_target_port
   health_check_path  = var.backend_alb_health_check_path
 }
+
+module "frontend" {
+  source = "../../modules/frontend/ec2"
+
+  aws_region        = var.aws_region
+  ami_id            = var.frontend_ami_id
+  instance_type     = var.frontend_instance_type
+  key_name          = var.frontend_key_name
+  subnet_id         = module.infrastructure.private_subnet_ids[0]
+  security_group_id = module.infrastructure.frontend_server_sg_id
+  instance_name     = var.frontend_name
+}

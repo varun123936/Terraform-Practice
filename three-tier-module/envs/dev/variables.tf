@@ -178,3 +178,23 @@ variable "backend_alb_health_check_path" {
   description = "Health check path for the backend ALB target group."
   type        = string
 }
+
+variable "frontend_instance_type" {
+  description = "Instance type for the frontend server."
+  type        = string
+}
+
+variable "frontend_ami_id" {
+  description = "AMI ID for the frontend server."
+  type        = string
+}
+
+variable "frontend_key_name" {
+  description = "Existing AWS key pair name for the frontend server."
+  type        = string
+}
+
+variable "frontend_name" {
+  description = "Name tag for the frontend server."
+  type        = string
+}

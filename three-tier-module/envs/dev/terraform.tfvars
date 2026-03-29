@@ -34,3 +34,7 @@ backend_alb_internal          = false
 backend_alb_listener_port     = 80
 backend_alb_target_port       = 80
 backend_alb_health_check_path = "/api"
+frontend_instance_type        = "t3.micro"
+frontend_ami_id               = "ami-0c3389a4fa5bddaad"
+frontend_key_name             = "threetier"
+frontend_name                 = "dev-frontend-server"
