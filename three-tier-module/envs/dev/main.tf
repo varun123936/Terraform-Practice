@@ -55,21 +55,6 @@ module "backend" {
   instance_name     = var.backend_name
 }
 
-module "backend_alb" {
-  source = "../../modules/alb"
-
-  alb_name           = var.backend_alb_name
-  target_group_name  = var.backend_alb_target_group_name
-  vpc_id             = module.infrastructure.vpc_id
-  subnet_ids         = module.infrastructure.public_subnet_ids
-  security_group_id  = module.infrastructure.alb_backend_sg_id
-  target_instance_id = module.backend.backend_instance_id
-  internal           = var.backend_alb_internal
-  listener_port      = var.backend_alb_listener_port
-  target_port        = var.backend_alb_target_port
-  health_check_path  = var.backend_alb_health_check_path
-}
-
 module "frontend" {
   source = "../../modules/frontend/ec2"
 
@@ -80,6 +65,21 @@ module "frontend" {
   subnet_id         = module.infrastructure.private_subnet_ids[0]
   security_group_id = module.infrastructure.frontend_server_sg_id
   instance_name     = var.frontend_name
+}
+
+module "backend_internal_alb" {
+  source = "../../modules/alb"
+
+  alb_name           = var.backend_internal_alb_name
+  target_group_name  = var.backend_internal_alb_target_group_name
+  vpc_id             = module.infrastructure.vpc_id
+  subnet_ids         = [module.infrastructure.private_subnet_ids[2], module.infrastructure.private_subnet_ids[4]]
+  security_group_id  = module.infrastructure.alb_backend_sg_id
+  target_instance_id = module.backend.backend_instance_id
+  internal           = var.backend_internal_alb_internal
+  listener_port      = var.backend_internal_alb_listener_port
+  target_port        = var.backend_internal_alb_target_port
+  health_check_path  = var.backend_internal_alb_health_check_path
 }
 
 module "frontend_alb" {

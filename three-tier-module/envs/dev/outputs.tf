@@ -43,14 +43,14 @@ output "backend_private_ip" {
   value       = module.backend.backend_private_ip
 }
 
-output "backend_alb_dns_name" {
-  description = "DNS name of the backend ALB."
-  value       = module.backend_alb.alb_dns_name
+output "backend_internal_alb_dns_name" {
+  description = "DNS name of the internal backend ALB."
+  value       = module.backend_internal_alb.alb_dns_name
 }
 
-output "backend_alb_target_group_arn" {
-  description = "Target group ARN for the backend ALB."
-  value       = module.backend_alb.target_group_arn
+output "backend_internal_alb_target_group_arn" {
+  description = "Target group ARN for the internal backend ALB."
+  value       = module.backend_internal_alb.target_group_arn
 }
 
 output "frontend_instance_id" {
