@@ -62,3 +62,13 @@ output "frontend_private_ip" {
   description = "Private IP of the frontend EC2 instance."
   value       = module.frontend.frontend_private_ip
 }
+
+output "frontend_alb_dns_name" {
+  description = "DNS name of the frontend ALB."
+  value       = module.frontend_alb.alb_dns_name
+}
+
+output "frontend_alb_target_group_arn" {
+  description = "Target group ARN for the frontend ALB."
+  value       = module.frontend_alb.target_group_arn
+}

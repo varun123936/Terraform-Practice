@@ -81,3 +81,18 @@ module "frontend" {
   security_group_id = module.infrastructure.frontend_server_sg_id
   instance_name     = var.frontend_name
 }
+
+module "frontend_alb" {
+  source = "../../modules/alb"
+
+  alb_name           = var.frontend_alb_name
+  target_group_name  = var.frontend_alb_target_group_name
+  vpc_id             = module.infrastructure.vpc_id
+  subnet_ids         = module.infrastructure.public_subnet_ids
+  security_group_id  = module.infrastructure.alb_frontend_sg_id
+  target_instance_id = module.frontend.frontend_instance_id
+  internal           = var.frontend_alb_internal
+  listener_port      = var.frontend_alb_listener_port
+  target_port        = var.frontend_alb_target_port
+  health_check_path  = var.frontend_alb_health_check_path
+}

@@ -198,3 +198,33 @@ variable "frontend_name" {
   description = "Name tag for the frontend server."
   type        = string
 }
+
+variable "frontend_alb_name" {
+  description = "Name of the frontend ALB."
+  type        = string
+}
+
+variable "frontend_alb_target_group_name" {
+  description = "Name of the frontend ALB target group."
+  type        = string
+}
+
+variable "frontend_alb_internal" {
+  description = "Whether the frontend ALB is internal."
+  type        = bool
+}
+
+variable "frontend_alb_listener_port" {
+  description = "Listener port for the frontend ALB."
+  type        = number
+}
+
+variable "frontend_alb_target_port" {
+  description = "Target port for the frontend ALB target group."
+  type        = number
+}
+
+variable "frontend_alb_health_check_path" {
+  description = "Health check path for the frontend ALB target group."
+  type        = string
+}
