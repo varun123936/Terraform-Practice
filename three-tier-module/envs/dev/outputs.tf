@@ -53,6 +53,16 @@ output "backend_internal_alb_target_group_arn" {
   value       = module.backend_internal_alb.target_group_arn
 }
 
+output "backend_launch_template_id" {
+  description = "ID of the backend launch template."
+  value       = module.backend_launch_template.backend_launch_template_id
+}
+
+output "backend_asg_name" {
+  description = "Name of the backend Auto Scaling Group."
+  value       = module.backend_asg.backend_asg_name
+}
+
 output "frontend_instance_id" {
   description = "ID of the frontend EC2 instance."
   value       = module.frontend.frontend_instance_id

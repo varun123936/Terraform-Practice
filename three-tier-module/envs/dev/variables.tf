@@ -139,6 +139,11 @@ variable "backend_ami_id" {
   type        = string
 }
 
+variable "backend_asg_ami_id" {
+  description = "AMI ID for backend instances launched by the ASG."
+  type        = string
+}
+
 variable "backend_key_name" {
   description = "Existing AWS key pair name for the backend server."
   type        = string
@@ -146,6 +151,11 @@ variable "backend_key_name" {
 
 variable "backend_name" {
   description = "Name tag for the backend server."
+  type        = string
+}
+
+variable "backend_asg_instance_name" {
+  description = "Name tag for backend instances launched by the ASG."
   type        = string
 }
 
@@ -177,6 +187,26 @@ variable "backend_internal_alb_target_port" {
 variable "backend_internal_alb_health_check_path" {
   description = "Health check path for the internal backend ALB target group."
   type        = string
+}
+
+variable "backend_desired_capacity" {
+  description = "Desired capacity for the backend ASG."
+  type        = number
+}
+
+variable "backend_min_size" {
+  description = "Minimum size for the backend ASG."
+  type        = number
+}
+
+variable "backend_max_size" {
+  description = "Maximum size for the backend ASG."
+  type        = number
+}
+
+variable "backend_scale_out_target_value" {
+  description = "Target CPU utilization percentage for backend scaling."
+  type        = number
 }
 
 variable "frontend_instance_type" {

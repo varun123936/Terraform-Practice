@@ -120,3 +120,27 @@ module "frontend_asg" {
   frontend_max_size           = var.frontend_max_size
   scale_out_target_value      = var.frontend_scale_out_target_value
 }
+
+module "backend_launch_template" {
+  source = "../../modules/backend/launch-template"
+
+  name_prefix   = var.name_prefix
+  ami_id        = var.backend_asg_ami_id
+  instance_type = var.backend_instance_type
+  backend_sg_id = module.infrastructure.backend_server_sg_id
+  key_name      = var.backend_key_name
+  instance_name = var.backend_asg_instance_name
+}
+
+module "backend_asg" {
+  source = "../../modules/backend/asg"
+
+  name_prefix                = var.name_prefix
+  backend_launch_template_id = module.backend_launch_template.backend_launch_template_id
+  subnet_ids                 = [module.infrastructure.private_subnet_ids[1], module.infrastructure.private_subnet_ids[4]]
+  backend_target_group_arn   = module.backend_internal_alb.target_group_arn
+  backend_desired_capacity   = var.backend_desired_capacity
+  backend_min_size           = var.backend_min_size
+  backend_max_size           = var.backend_max_size
+  scale_out_target_value     = var.backend_scale_out_target_value
+}
