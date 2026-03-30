@@ -144,3 +144,12 @@ module "backend_asg" {
   backend_max_size           = var.backend_max_size
   scale_out_target_value     = var.backend_scale_out_target_value
 }
+
+module "route53" {
+  source = "../../modules/route53"
+
+  zone_name     = var.route53_zone_name
+  record_name   = var.route53_record_name
+  alias_name    = module.frontend_alb.alb_dns_name
+  alias_zone_id = module.frontend_alb.alb_zone_id
+}

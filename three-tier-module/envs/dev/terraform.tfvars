@@ -56,3 +56,5 @@ frontend_desired_capacity              = 1
 frontend_min_size                      = 1
 frontend_max_size                      = 2
 frontend_scale_out_target_value        = 80
+route53_zone_name                      = "rvarunstack.online"
+route53_record_name                    = "rvarunstack.online"

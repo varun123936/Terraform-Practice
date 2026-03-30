@@ -288,3 +288,13 @@ variable "frontend_scale_out_target_value" {
   description = "Target CPU utilization percentage for frontend scaling."
   type        = number
 }
+
+variable "route53_zone_name" {
+  description = "Public Route 53 hosted zone name."
+  type        = string
+}
+
+variable "route53_record_name" {
+  description = "Record name to map to the frontend ALB."
+  type        = string
+}

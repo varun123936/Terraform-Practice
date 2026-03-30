@@ -92,3 +92,8 @@ output "frontend_asg_name" {
   description = "Name of the frontend Auto Scaling Group."
   value       = module.frontend_asg.frontend_asg_name
 }
+
+output "route53_frontend_record_fqdn" {
+  description = "Route 53 record mapped to the frontend ALB."
+  value       = module.route53.record_fqdn
+}
