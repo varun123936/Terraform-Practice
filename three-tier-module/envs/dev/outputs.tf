@@ -72,3 +72,13 @@ output "frontend_alb_target_group_arn" {
   description = "Target group ARN for the frontend ALB."
   value       = module.frontend_alb.target_group_arn
 }
+
+output "frontend_launch_template_id" {
+  description = "ID of the frontend launch template."
+  value       = module.frontend_launch_template.frontend_launch_template_id
+}
+
+output "frontend_asg_name" {
+  description = "Name of the frontend Auto Scaling Group."
+  value       = module.frontend_asg.frontend_asg_name
+}

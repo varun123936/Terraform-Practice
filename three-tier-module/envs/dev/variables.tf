@@ -189,6 +189,11 @@ variable "frontend_ami_id" {
   type        = string
 }
 
+variable "frontend_asg_ami_id" {
+  description = "AMI ID for frontend instances launched by the ASG."
+  type        = string
+}
+
 variable "frontend_key_name" {
   description = "Existing AWS key pair name for the frontend server."
   type        = string
@@ -227,4 +232,29 @@ variable "frontend_alb_target_port" {
 variable "frontend_alb_health_check_path" {
   description = "Health check path for the frontend ALB target group."
   type        = string
+}
+
+variable "frontend_asg_instance_name" {
+  description = "Name tag for frontend instances launched by the ASG."
+  type        = string
+}
+
+variable "frontend_desired_capacity" {
+  description = "Desired capacity for the frontend ASG."
+  type        = number
+}
+
+variable "frontend_min_size" {
+  description = "Minimum size for the frontend ASG."
+  type        = number
+}
+
+variable "frontend_max_size" {
+  description = "Maximum size for the frontend ASG."
+  type        = number
+}
+
+variable "frontend_scale_out_target_value" {
+  description = "Target CPU utilization percentage for frontend scaling."
+  type        = number
 }
