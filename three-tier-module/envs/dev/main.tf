@@ -97,53 +97,53 @@ module "frontend_alb" {
   health_check_path  = var.frontend_alb_health_check_path
 }
 
-module "frontend_launch_template" {
-  source = "../../modules/frontend/launch-template"
+# module "frontend_launch_template" {
+#   source = "../../modules/frontend/launch-template"
 
-  name_prefix    = var.name_prefix
-  ami_id         = var.frontend_asg_ami_id
-  instance_type  = var.frontend_instance_type
-  frontend_sg_id = module.infrastructure.frontend_server_sg_id
-  key_name       = var.frontend_key_name
-  instance_name  = var.frontend_asg_instance_name
-}
+#   name_prefix    = var.name_prefix
+#   ami_id         = var.frontend_asg_ami_id
+#   instance_type  = var.frontend_instance_type
+#   frontend_sg_id = module.infrastructure.frontend_server_sg_id
+#   key_name       = var.frontend_key_name
+#   instance_name  = var.frontend_asg_instance_name
+# }
 
-module "frontend_asg" {
-  source = "../../modules/frontend/asg"
+# module "frontend_asg" {
+#   source = "../../modules/frontend/asg"
 
-  name_prefix                 = var.name_prefix
-  frontend_launch_template_id = module.frontend_launch_template.frontend_launch_template_id
-  subnet_ids                  = [module.infrastructure.private_subnet_ids[0], module.infrastructure.private_subnet_ids[3]]
-  frontend_target_group_arn   = module.frontend_alb.target_group_arn
-  frontend_desired_capacity   = var.frontend_desired_capacity
-  frontend_min_size           = var.frontend_min_size
-  frontend_max_size           = var.frontend_max_size
-  scale_out_target_value      = var.frontend_scale_out_target_value
-}
+#   name_prefix                 = var.name_prefix
+#   frontend_launch_template_id = module.frontend_launch_template.frontend_launch_template_id
+#   subnet_ids                  = [module.infrastructure.private_subnet_ids[0], module.infrastructure.private_subnet_ids[3]]
+#   frontend_target_group_arn   = module.frontend_alb.target_group_arn
+#   frontend_desired_capacity   = var.frontend_desired_capacity
+#   frontend_min_size           = var.frontend_min_size
+#   frontend_max_size           = var.frontend_max_size
+#   scale_out_target_value      = var.frontend_scale_out_target_value
+# }
 
-module "backend_launch_template" {
-  source = "../../modules/backend/launch-template"
+# module "backend_launch_template" {
+#   source = "../../modules/backend/launch-template"
 
-  name_prefix   = var.name_prefix
-  ami_id        = var.backend_asg_ami_id
-  instance_type = var.backend_instance_type
-  backend_sg_id = module.infrastructure.backend_server_sg_id
-  key_name      = var.backend_key_name
-  instance_name = var.backend_asg_instance_name
-}
+#   name_prefix   = var.name_prefix
+#   ami_id        = var.backend_asg_ami_id
+#   instance_type = var.backend_instance_type
+#   backend_sg_id = module.infrastructure.backend_server_sg_id
+#   key_name      = var.backend_key_name
+#   instance_name = var.backend_asg_instance_name
+# }
 
-module "backend_asg" {
-  source = "../../modules/backend/asg"
+# module "backend_asg" {
+#   source = "../../modules/backend/asg"
 
-  name_prefix                = var.name_prefix
-  backend_launch_template_id = module.backend_launch_template.backend_launch_template_id
-  subnet_ids                 = [module.infrastructure.private_subnet_ids[1], module.infrastructure.private_subnet_ids[4]]
-  backend_target_group_arn   = module.backend_internal_alb.target_group_arn
-  backend_desired_capacity   = var.backend_desired_capacity
-  backend_min_size           = var.backend_min_size
-  backend_max_size           = var.backend_max_size
-  scale_out_target_value     = var.backend_scale_out_target_value
-}
+#   name_prefix                = var.name_prefix
+#   backend_launch_template_id = module.backend_launch_template.backend_launch_template_id
+#   subnet_ids                 = [module.infrastructure.private_subnet_ids[1], module.infrastructure.private_subnet_ids[4]]
+#   backend_target_group_arn   = module.backend_internal_alb.target_group_arn
+#   backend_desired_capacity   = var.backend_desired_capacity
+#   backend_min_size           = var.backend_min_size
+#   backend_max_size           = var.backend_max_size
+#   scale_out_target_value     = var.backend_scale_out_target_value
+# }
 
 module "route53" {
   source = "../../modules/route53"
