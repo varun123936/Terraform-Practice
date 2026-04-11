@@ -1,0 +1,99 @@
+// Terraform Example 1
+pipeline {
+    agent any
+
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/varun123936/Terraform-Practice.git'
+            }
+        }
+        stage('init') {
+            steps {
+                sh '''
+                cd three-tier-module/envs/dev
+                terraform init
+                '''
+            }
+        }
+        stage('plan') {
+            steps {
+                sh '''
+                cd three-tier-module/envs/dev
+                terraform plan
+                '''
+            }
+        }
+        stage('approve plan') {
+            steps {
+            script {
+                input message: 'Do you approve the Terraform plan?', ok: 'Apply'
+            }
+            }
+        }
+        stage('apply') {
+            steps {
+                sh '''
+                cd three-tier-module/envs/dev
+                terraform apply -auto-approve
+                '''
+            }
+        }
+        stage('destroy') {
+            steps {
+                sh '''
+                cd three-tier-module/envs/dev
+                terraform destroy -auto-approve
+                '''
+            }
+        }
+    }
+}
+
+// Terraform Example 2
+pipeline {
+    agent any
+
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/varun123936/Terraform-Practice.git'
+            }
+        }
+        stage('init') {
+            steps {
+                dir('three-tier-module/envs/dev') {
+                    sh 'terraform init'
+                }
+            }
+        }
+        stage('plan') {
+            steps {
+                dir('three-tier-module/envs/dev') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+        stage('approve plan') {
+            steps {
+                script {
+                    input message: 'Do you approve the Terraform plan?', ok: 'Apply'
+                }
+            }
+        }
+        stage('apply') {
+            steps {
+                dir('three-tier-module/envs/dev') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+        stage('destroy') {
+            steps {
+                dir('three-tier-module/envs/dev') {
+                    sh 'terraform destroy -auto-approve'
+                }
+            }
+        }
+    }
+}
