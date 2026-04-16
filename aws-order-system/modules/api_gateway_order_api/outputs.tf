@@ -18,4 +18,9 @@ output "invoke_url" {
   value       = "https://${aws_api_gateway_rest_api.this.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_api_gateway_stage.this.stage_name}/${var.resource_path_part}"
 }
 
+output "get_order_invoke_url" {
+  description = "Invoke URL for the GET /order/{order_id} endpoint."
+  value       = "https://${aws_api_gateway_rest_api.this.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_api_gateway_stage.this.stage_name}/${var.resource_path_part}/{order_id}"
+}
+
 data "aws_region" "current" {}

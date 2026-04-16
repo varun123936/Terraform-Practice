@@ -8,6 +8,11 @@ output "orders_table_arn" {
   value       = module.dynamodb_orders.table_arn
 }
 
+output "order_counter_table_name" {
+  description = "Name of the order counter DynamoDB table."
+  value       = module.dynamodb_order_counter.table_name
+}
+
 output "orders_queue_name" {
   description = "Name of the orders SQS queue."
   value       = module.sqs_orders.queue_name
@@ -61,4 +66,9 @@ output "order_api_id" {
 output "order_api_invoke_url" {
   description = "Invoke URL for the POST /order endpoint."
   value       = module.api_gateway_order_api.invoke_url
+}
+
+output "order_api_get_order_url" {
+  description = "Invoke URL template for the GET /order/{order_id} endpoint."
+  value       = module.api_gateway_order_api.get_order_invoke_url
 }

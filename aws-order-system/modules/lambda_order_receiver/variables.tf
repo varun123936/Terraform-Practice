@@ -48,6 +48,26 @@ variable "sqs_queue_url" {
   type        = string
 }
 
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table used by the Lambda."
+  type        = string
+}
+
+variable "dynamodb_table_arn" {
+  description = "ARN of the DynamoDB table used by the Lambda."
+  type        = string
+}
+
+variable "counter_table_name" {
+  description = "Name of the DynamoDB counter table used for generating sequential order IDs."
+  type        = string
+}
+
+variable "counter_table_arn" {
+  description = "ARN of the DynamoDB counter table used for generating sequential order IDs."
+  type        = string
+}
+
 variable "environment_variables" {
   description = "Additional Lambda environment variables."
   type        = map(string)

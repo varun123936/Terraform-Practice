@@ -9,6 +9,17 @@ module "dynamodb_orders" {
   tags                           = var.tags
 }
 
+module "dynamodb_order_counter" {
+  source = "../../modules/dynamodb"
+
+  table_name                     = var.order_counter_table_name
+  partition_key_name             = var.order_counter_table_partition_key
+  partition_key_type             = var.order_counter_table_partition_key_type
+  point_in_time_recovery_enabled = var.order_counter_table_point_in_time_recovery_enabled
+  deletion_protection_enabled    = var.order_counter_table_deletion_protection_enabled
+  tags                           = var.tags
+}
+
 module "sqs_orders" {
   source = "../../modules/sqs"
 
@@ -31,6 +42,10 @@ module "lambda_order_receiver" {
   package_file          = var.order_receiver_package_file
   sqs_queue_arn         = module.sqs_orders.queue_arn
   sqs_queue_url         = module.sqs_orders.queue_url
+  dynamodb_table_name   = module.dynamodb_orders.table_name
+  dynamodb_table_arn    = module.dynamodb_orders.table_arn
+  counter_table_name    = module.dynamodb_order_counter.table_name
+  counter_table_arn     = module.dynamodb_order_counter.table_arn
   environment_variables = var.order_receiver_environment_variables
   tags                  = var.tags
 }

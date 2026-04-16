@@ -20,6 +20,12 @@ resource "aws_api_gateway_resource" "order" {
   path_part   = var.resource_path_part
 }
 
+resource "aws_api_gateway_resource" "order_id" {
+  rest_api_id = aws_api_gateway_rest_api.this.id
+  parent_id   = aws_api_gateway_resource.order.id
+  path_part   = "{order_id}"
+}
+
 resource "aws_api_gateway_method" "order_post" {
   rest_api_id   = aws_api_gateway_rest_api.this.id
   resource_id   = aws_api_gateway_resource.order.id
@@ -42,6 +48,34 @@ resource "aws_lambda_permission" "allow_api_gateway_invoke" {
   function_name = var.lambda_function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*/POST/${var.resource_path_part}"
+}
+
+resource "aws_api_gateway_method" "order_get" {
+  rest_api_id   = aws_api_gateway_rest_api.this.id
+  resource_id   = aws_api_gateway_resource.order_id.id
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.order_id" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "order_get" {
+  rest_api_id             = aws_api_gateway_rest_api.this.id
+  resource_id             = aws_api_gateway_resource.order_id.id
+  http_method             = aws_api_gateway_method.order_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = var.lambda_invoke_arn
+}
+
+resource "aws_lambda_permission" "allow_api_gateway_invoke_get" {
+  statement_id  = "AllowExecutionFromApiGatewayGet"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*/GET/${var.resource_path_part}/*"
 }
 
 resource "aws_api_gateway_method" "order_options" {
@@ -87,7 +121,7 @@ resource "aws_api_gateway_integration_response" "order_options" {
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST,GET'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
@@ -98,8 +132,11 @@ resource "aws_api_gateway_deployment" "this" {
   triggers = {
     redeployment = sha1(jsonencode({
       resource_id                  = aws_api_gateway_resource.order.id
+      order_id_resource_id         = aws_api_gateway_resource.order_id.id
       post_method_id               = aws_api_gateway_method.order_post.id
       post_integration_id          = aws_api_gateway_integration.order_post.id
+      get_method_id                = aws_api_gateway_method.order_get.id
+      get_integration_id           = aws_api_gateway_integration.order_get.id
       options_method_id            = aws_api_gateway_method.order_options.id
       options_integration_id       = aws_api_gateway_integration.order_options.id
       options_method_response_id   = aws_api_gateway_method_response.order_options.id
@@ -113,6 +150,7 @@ resource "aws_api_gateway_deployment" "this" {
 
   depends_on = [
     aws_api_gateway_integration.order_post,
+    aws_api_gateway_integration.order_get,
     aws_api_gateway_integration.order_options,
     aws_api_gateway_method_response.order_options,
     aws_api_gateway_integration_response.order_options

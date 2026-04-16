@@ -28,6 +28,31 @@ variable "orders_table_deletion_protection_enabled" {
   type        = bool
 }
 
+variable "order_counter_table_name" {
+  description = "DynamoDB table name for the order sequence counter."
+  type        = string
+}
+
+variable "order_counter_table_partition_key" {
+  description = "Partition key for the order counter DynamoDB table."
+  type        = string
+}
+
+variable "order_counter_table_partition_key_type" {
+  description = "DynamoDB type for the order counter partition key."
+  type        = string
+}
+
+variable "order_counter_table_point_in_time_recovery_enabled" {
+  description = "Enable point-in-time recovery for the order counter table."
+  type        = bool
+}
+
+variable "order_counter_table_deletion_protection_enabled" {
+  description = "Enable deletion protection for the order counter table."
+  type        = bool
+}
+
 variable "orders_queue_name" {
   description = "Name of the SQS queue for incoming orders."
   type        = string
@@ -132,6 +157,7 @@ variable "order_processor_environment_variables" {
   description = "Additional environment variables for the order processor Lambda."
   type        = map(string)
 }
+
 
 variable "order_api_name" {
   description = "Name of the order REST API."

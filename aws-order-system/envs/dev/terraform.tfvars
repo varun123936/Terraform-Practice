@@ -7,6 +7,13 @@ orders_table_partition_key_type = "S"
 orders_table_point_in_time_recovery_enabled = true
 orders_table_deletion_protection_enabled    = true
 
+order_counter_table_name               = "order-counter-table"
+order_counter_table_partition_key      = "counter_name"
+order_counter_table_partition_key_type = "S"
+
+order_counter_table_point_in_time_recovery_enabled = true
+order_counter_table_deletion_protection_enabled    = true
+
 orders_queue_name                       = "order-queue"
 orders_queue_visibility_timeout_seconds = 30
 orders_queue_message_retention_seconds  = 86400
