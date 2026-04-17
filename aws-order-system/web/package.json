@@ -1,0 +1,13 @@
+{
+  "name": "aws-order-system-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Step 1 local UI for the AWS order system workshop.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
