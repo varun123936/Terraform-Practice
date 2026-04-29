@@ -95,13 +95,13 @@ aiForm.addEventListener("submit", (event) => {
   const question = String(formData.get("question") || "").trim();
 
   aiResult.textContent = pretty({
-    step: 2,
+    step: 3,
     status: "Placeholder",
-    message: "Ollama and MCP are not connected yet. The UI/backend foundation is ready for the next steps.",
+    message: "MCP is now part of the architecture. Gemini integration will be added in the next step.",
     next_steps: [
-      "Step 3: Add MCP tools in Node.js",
-      "Step 4: Connect Ollama chat",
-      "Step 5: Answer customer questions using order context"
+      "Step 4: Connect Gemini chat",
+      "Step 5: Answer customer questions using order context",
+      "Step 6: polish the workflow"
     ],
     request: {
       order_id: orderId,

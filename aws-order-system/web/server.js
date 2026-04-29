@@ -15,81 +15,61 @@ app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     app: "aws-order-system-ui",
-    step: 2,
-    apiConfigured: Boolean(getOrderPostUrl()),
-    message: "UI backend is running. MCP and Ollama wiring will come in later steps."
+    step: 3,
+    mcpConfigured: Boolean(getMcpServerUrl()),
+    message: "UI backend is running through MCP tools. Gemini wiring will come in the next step."
   });
 });
 
 app.get("/api/config", (_req, res) => {
   res.json({
     ok: true,
-    step: 2,
-    apiConfigured: Boolean(getOrderPostUrl()),
-    orderPostUrl: getOrderPostUrl() || null,
-    orderGetBaseUrl: getOrderBaseUrl() || null
+    step: 3,
+    mcpServerUrl: getMcpServerUrl() || null
   });
 });
 
 app.post("/api/orders", async (req, res) => {
-  const apiUrl = getOrderPostUrl();
-
-  if (!apiUrl) {
-    return res.status(500).json({
-      message: "ORDER_API_URL or ORDER_API_BASE_URL is not configured on the local UI server."
-    });
-  }
-
   try {
-    const upstream = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body || {})
-    });
-
-    const data = await readJson(upstream);
-    return res.status(upstream.status).json(data);
+    const result = await callMcpTool("place_order", req.body || {});
+    const structured = result.structuredContent || {};
+    return res.status(structured.statusCode || 200).json(structured.response || {});
   } catch (error) {
-    console.error("Create order proxy error:", error.message);
-    return res.status(502).json({
-      message: "Unable to reach the AWS order API.",
-      detail: error.message
+    console.error("Create order MCP error:", error.message);
+    return res.status(error.statusCode || 502).json({
+      message: error.message || "Unable to reach MCP order tool."
     });
   }
 });
 
 app.get("/api/orders/:orderId", async (req, res) => {
   try {
-    const order = await fetchOrder(req.params.orderId);
+    const result = await callMcpTool("get_order", { orderId: req.params.orderId });
+    const order = result.structuredContent?.order;
     return res.json({ order });
   } catch (error) {
-    return handleOrderFetchError(res, error);
+    return handleMcpError(res, error);
   }
 });
 
 app.get("/api/orders/:orderId/status", async (req, res) => {
   try {
-    const order = await fetchOrder(req.params.orderId);
-    return res.json({
-      order_id: getOrderId(order),
-      status: order.status || "UNKNOWN",
-      payment_status: order.paymentStatus || order.payment_status || null,
-      shipping_status: order.shippingStatus || order.shipping_status || null
-    });
+    const result = await callMcpTool("get_order_status", { orderId: req.params.orderId });
+    return res.json(result.structuredContent || {});
   } catch (error) {
-    return handleOrderFetchError(res, error);
+    return handleMcpError(res, error);
   }
 });
 
 app.get("/api/orders/:orderId/summary", async (req, res) => {
   try {
-    const order = await fetchOrder(req.params.orderId);
+    const result = await callMcpTool("summarize_order", { orderId: req.params.orderId });
     return res.json({
-      order_id: getOrderId(order),
-      summary: buildOrderSummary(order)
+      order_id: req.params.orderId,
+      summary: result.structuredContent?.summary || textFromResult(result)
     });
   } catch (error) {
-    return handleOrderFetchError(res, error);
+    return handleMcpError(res, error);
   }
 });
 
@@ -100,57 +80,6 @@ app.get("*", (_req, res) => {
 app.listen(port, () => {
   console.log(`aws-order-system UI running at http://localhost:${port}`);
 });
-
-function getOrderPostUrl() {
-  const directUrl = process.env.ORDER_API_URL?.trim();
-  if (directUrl) {
-    return directUrl;
-  }
-
-  const baseUrl = getOrderBaseUrl();
-  return baseUrl ? `${baseUrl}/order` : "";
-}
-
-function getOrderBaseUrl() {
-  const baseUrl = process.env.ORDER_API_BASE_URL?.trim();
-  if (baseUrl) {
-    return baseUrl.replace(/\/+$/, "");
-  }
-
-  const directUrl = process.env.ORDER_API_URL?.trim();
-  if (!directUrl) {
-    return "";
-  }
-
-  return directUrl.replace(/\/order\/?$/, "");
-}
-
-async function fetchOrder(orderId) {
-  const trimmedId = String(orderId || "").trim();
-  if (!trimmedId) {
-    const error = new Error("Order ID is required.");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const baseUrl = getOrderBaseUrl();
-  if (!baseUrl) {
-    const error = new Error("ORDER_API_URL or ORDER_API_BASE_URL is not configured on the local UI server.");
-    error.statusCode = 500;
-    throw error;
-  }
-
-  const upstream = await fetch(`${baseUrl}/order/${encodeURIComponent(trimmedId)}`);
-  const data = await readJson(upstream);
-
-  if (!upstream.ok) {
-    const error = new Error(data.error || data.message || "Failed to fetch order.");
-    error.statusCode = upstream.status;
-    throw error;
-  }
-
-  return data.order || data;
-}
 
 async function readJson(response) {
   const text = await response.text();
@@ -163,28 +92,6 @@ async function readJson(response) {
   } catch {
     return { raw: text };
   }
-}
-
-function buildOrderSummary(order) {
-  const orderId = getOrderId(order);
-  const customerName = order.customer_name || order.customerName || "Customer";
-  const productId = order.product_id || order.productId || "unknown-product";
-  const quantity = order.quantity ?? 0;
-  const totalAmount = order.total_amount ?? order.totalAmount ?? 0;
-  const status = order.status || "UNKNOWN";
-
-  return `Order ${orderId} for ${customerName} contains ${quantity} unit(s) of ${productId}. Current status is ${status}. Total amount is ${totalAmount}.`;
-}
-
-function getOrderId(order) {
-  return order.order_id || order.orderId || "unknown";
-}
-
-function handleOrderFetchError(res, error) {
-  console.error("Order lookup proxy error:", error.message);
-  return res.status(error.statusCode || 502).json({
-    message: error.message || "Unable to fetch order details."
-  });
 }
 
 function loadEnvFile() {
@@ -208,4 +115,48 @@ function loadEnvFile() {
       process.env[key] = value;
     }
   }
+}
+
+function getMcpServerUrl() {
+  return (process.env.MCP_SERVER_URL || "http://127.0.0.1:8000").trim();
+}
+
+async function callMcpTool(name, argumentsObject = {}) {
+  const response = await fetch(`${getMcpServerUrl()}/mcp/call`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      name,
+      arguments: argumentsObject
+    })
+  });
+
+  const data = await readJson(response);
+  if (data.ok) {
+    return data.result || {};
+  }
+
+  const errorInfo = data.error || {};
+  const error = new Error(errorInfo.message || "MCP tool call failed.");
+  error.statusCode = response.status;
+  error.code = errorInfo.code;
+  throw error;
+}
+
+function textFromResult(result) {
+  const content = result.content || [];
+  return content
+    .filter((block) => block.type === "text" && block.text)
+    .map((block) => block.text.trim())
+    .join("\n");
+}
+
+function handleMcpError(res, error) {
+  console.error("MCP proxy error:", error.message);
+  return res.status(error.statusCode || 502).json({
+    message: error.message || "Unable to reach MCP tool."
+  });
 }
