@@ -3,88 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AWS Order System | UI Step 1</title>
+    <title>AWS Order System | Gemini · MCP · AWS</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="shell">
+
+      <!-- ── HERO ─────────────────────────────────────────────────────────── -->
       <section class="hero">
         <div class="hero-top">
           <p class="promo-badge">AWS Order System</p>
           <div class="brand-card">
-            <span class="brand-title">Node.js + Terraform + AWS</span>
-            <span class="brand-subtitle">Step 1: UI foundation before MCP and Ollama</span>
+            <span class="brand-title">Gemini · MCP Server · AWS</span>
+            <span class="brand-subtitle">End-to-end AI-powered order assistant</span>
           </div>
         </div>
 
-        <div class="scroll-banner" aria-label="Roadmap">
+        <div class="scroll-banner" aria-label="Tech stack">
           <div class="scroll-banner-track">
-            <span>Step 1 UI</span>
-            <span>Step 2 backend wiring</span>
-            <span>Step 3 MCP tools</span>
-            <span>Step 4 Ollama support</span>
-            <span>Step 1 UI</span>
-            <span>Step 2 backend wiring</span>
-            <span>Step 3 MCP tools</span>
-            <span>Step 4 Ollama support</span>
+            <span>API Gateway &rarr; Lambda &rarr; SQS &rarr; DynamoDB</span>
+            <span>Gemini 2.5 Flash AI support</span>
+            <span>MCP Server tooling</span>
+            <span>API Gateway &rarr; Lambda &rarr; SQS &rarr; DynamoDB</span>
+            <span>Gemini 2.5 Flash AI support</span>
+            <span>MCP Server tooling</span>
           </div>
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow">Local Workshop Interface</p>
+            <p class="eyebrow">LLMOps Workshop</p>
             <h1>
-              Build a clean
-              <span class="accent-cyan">Order Dashboard</span>
-              before adding
-              <span class="accent-gold">MCP</span>
-              and
-              <span class="accent-cyan">Ollama</span>
+              Turn <span class="accent-cyan">Gemini</span> into an
+              <span class="accent-gold">Actionable Agent</span> using
+              <span class="accent-cyan">MCP</span> and
+              <span class="accent-cyan">AWS</span>
             </h1>
             <p class="lede">
-              This UI mirrors the learning flow of your Claude demo project, but it is
-              tailored for the current Node.js AWS order system. In this first step, we
-              focus only on the browser experience and the app structure.
+              Place orders through API Gateway, track them in DynamoDB, and get
+              AI-powered customer support answers — all wired together through a
+              production-grade MCP server.
             </p>
 
             <div class="hero-actions">
-              <span class="hero-pill">Create orders</span>
-              <span class="hero-pill">Lookup by order ID</span>
-              <span class="hero-pill">AI chat placeholder</span>
+              <span class="hero-pill">Live AWS Order Pipeline</span>
+              <span class="hero-pill">Gemini-Powered Support</span>
+              <span class="hero-pill">MCP Tool Workflow</span>
             </div>
 
             <div class="hero-highlights">
               <div class="highlight-card">
-                <span class="highlight-kicker">Why this step</span>
-                <strong>Get the screen, flow, and UX right before adding more moving parts.</strong>
+                <span class="highlight-kicker">What You Build</span>
+                <strong>One dashboard for orders, lookup, and AI chat</strong>
               </div>
               <div class="highlight-card">
-                <span class="highlight-kicker">What comes next</span>
-                <strong>Backend routes, MCP integration, and Ollama-powered order support.</strong>
+                <span class="highlight-kicker">Why It Stands Out</span>
+                <strong>Real workflow: browser → MCP → AWS → Gemini</strong>
               </div>
             </div>
           </div>
 
           <aside class="hero-panel">
             <div class="orb-stack">
-              <div class="orb orb-main">Orders</div>
+              <div class="orb orb-main">LLMOps</div>
               <div class="orb orb-small">AWS</div>
-              <div class="orb orb-small">UI</div>
-            </div>
-
-            <div class="hero-note">
-              <span class="hero-note-label">Current Status</span>
-              <p>
-                This page is live and interactive, but its forms are still in workshop mode.
-                They show the intended payloads and user flow until we connect the real
-                backend in the next step.
-              </p>
+              <div class="orb orb-small">MCP</div>
             </div>
           </aside>
         </div>
       </section>
 
+      <!-- ── CARDS ─────────────────────────────────────────────────────────── -->
       <section class="grid">
+
+        <!-- Create Order -->
         <article class="card">
           <h2>Create Order</h2>
           <form id="create-order-form">
@@ -94,27 +86,28 @@
             </label>
             <label>
               Product ID
-              <input name="product_id" placeholder="product-101" required />
+              <input name="product_id" placeholder="PROD-101" required />
             </label>
             <label>
               Quantity
               <input name="quantity" type="number" min="1" value="1" required />
             </label>
             <label>
-              Price Per Unit
+              Price Per Unit (USD)
               <input name="price_per_unit" type="number" min="0" step="0.01" value="499" />
             </label>
-            <button type="submit">Preview Create Payload</button>
+            <button type="submit">Submit Order</button>
           </form>
           <pre id="create-order-result" class="result">Waiting for input...</pre>
         </article>
 
+        <!-- Lookup Order -->
         <article class="card">
           <h2>Lookup Order</h2>
           <form id="lookup-form">
             <label>
               Order ID
-              <input name="order_id" placeholder="1" required />
+              <input name="orderId" placeholder="1" required />
             </label>
             <div class="actions">
               <button type="button" data-action="status">Check Status</button>
@@ -122,29 +115,31 @@
               <button type="button" data-action="summary">Summarize</button>
             </div>
           </form>
-          <pre id="lookup-result" class="result">Lookup output will appear here.</pre>
+          <pre id="lookup-result" class="result">Order output will appear here.</pre>
         </article>
 
+        <!-- Ask AI — full-width -->
         <article class="card card-wide">
-          <h2>Ask AI</h2>
+          <h2>Ask AI <span class="ai-badge">Gemini 2.5 Flash</span></h2>
           <form id="ai-form">
             <label>
               Order ID
-              <input name="order_id" placeholder="1" required />
+              <input name="orderId" placeholder="1" required />
             </label>
             <label>
               Customer Question
               <textarea
                 name="question"
                 rows="4"
-                placeholder="Where is my order and what is its current status?"
+                placeholder="Where is my order? When will it be delivered?"
                 required
               ></textarea>
             </label>
-            <button type="submit">Preview AI Request</button>
+            <button type="submit">Ask Gemini</button>
           </form>
-          <pre id="ai-result" class="result">Ollama integration will be connected in a later step.</pre>
+          <pre id="ai-result" class="result">Gemini AI response will appear here.</pre>
         </article>
+
       </section>
     </main>
 
