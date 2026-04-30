@@ -2,25 +2,18 @@
   "name": "aws-order-system-mcp",
   "version": "2.0.0",
   "private": true,
-  "description": "Production MCP server for the AWS order system. Supports stdio (MCP Inspector / Claude Desktop) and HTTP transports.",
+  "description": "MCP server for the AWS order system. HTTP mode for web UI. stdio mode for MCP Inspector.",
   "main": "mcp_server.js",
   "scripts": {
-    "start":       "node mcp_server.js",
-    "start:http":  "cross-env MCP_TRANSPORT=http node mcp_server.js",
-    "dev":         "nodemon mcp_server.js",
-    "dev:http":    "cross-env MCP_TRANSPORT=http nodemon mcp_server.js",
-    "mcp:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector node mcp_server.js"
+    "start":        "node mcp_server.js --http",
+    "mcp:inspect":  "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector node mcp_server.js --stdio"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.918.0",
-    "@aws-sdk/lib-dynamodb":    "^3.918.0",
-    "@google/generative-ai":    "^0.24.1",
+    "@aws-sdk/client-dynamodb":  "^3.918.0",
+    "@aws-sdk/lib-dynamodb":     "^3.918.0",
+    "@google/generative-ai":     "^0.24.1",
     "@modelcontextprotocol/sdk": "^1.12.0",
-    "express":                  "^4.21.2",
-    "zod":                      "^3.23.8"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "nodemon":   "^3.1.14"
+    "express":                   "^4.21.2",
+    "zod":                       "^3.23.8"
   }
 }
